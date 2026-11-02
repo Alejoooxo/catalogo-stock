@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f5f5f7">
+<title>iAShop · Stock Apple</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;background:#f5f5f7;color:#111}
+header{padding:45px 18px 25px;text-align:center;background:linear-gradient(180deg,#fff,#f5f5f7)}
+.logo{font-size:18px;font-weight:700;letter-spacing:-.5px}
+h1{font-size:38px;line-height:1;margin:12px 0 8px;letter-spacing:-2px}
+.sub{color:#777;font-size:15px}
+.update{display:inline-block;margin-top:12px;padding:7px 12px;background:#e9f7ed;color:#16833b;border-radius:20px;font-size:12px;font-weight:600}
+.filters{position:sticky;top:0;z-index:10;background:#f5f5f7ee;backdrop-filter:blur(15px);padding:12px 12px;display:flex;gap:8px;overflow:auto}
+.filters button{border:0;background:#e5e5ea;border-radius:22px;padding:10px 15px;white-space:nowrap;font-weight:600;color:#333}
+.filters button.active{background:#111;color:white}
+main{max-width:900px;margin:auto;padding:8px 14px 110px}
+.section{margin:25px 0 35px}
+.section h2{font-size:25px;letter-spacing:-1px;margin:0 4px 14px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:white;border-radius:20px;padding:16px;box-shadow:0 2px 12px #0000000a}
+.icon{height:95px;border-radius:15px;background:#f5f5f7;display:flex;align-items:center;justify-content:center;font-size:42px;margin-bottom:13px}
+.name{font-size:17px;font-weight:700}
+.spec{font-size:13px;color:#666;line-height:1.45;margin:6px 0 10px}
+.stock{font-size:12px;color:#159447;font-weight:600;margin-bottom:12px}
+.card button{width:100%;border:0;border-radius:13px;background:#111;color:white;padding:11px;font-weight:600;font-size:13px}
+footer{position:fixed;bottom:0;left:0;right:0;padding:12px 15px calc(12px + env(safe-area-inset-bottom));background:#ffffffee;backdrop-filter:blur(18px);box-shadow:0 -4px 20px #0000000b}
+.whatsapp{display:block;max-width:600px;margin:auto;text-align:center;text-decoration:none;background:#20c66b;color:white;padding:14px;border-radius:16px;font-weight:700}
+@media(max-width:600px){.grid{grid-template-columns:1fr 1fr}.card{padding:13px}.icon{height:82px;font-size:35px}h1{font-size:34px}}
+</style>
+</head>
+
+<body>
+<header>
+<div class="logo"> iAShop</div>
+<h1>Stock Apple</h1>
+<div class="sub">Disponibilidad de hoy</div>
+<div class="update">● Actualizado · 2 de noviembre de 2026</div>
+</header>
+
+<div class="filters">
+<button class="active" data-filter="all">Todo</button>
+<button data-filter="new">🍎 iPhone nuevos</button>
+<button data-filter="display">⭐ Exhibición</button>
+<button data-filter="ipad">📱 iPad</button>
+<button data-filter="airpods">🎧 AirPods</button>
+<button data-filter="watch">⌚ Apple Watch</button>
+<button data-filter="accessories">🔌 Accesorios</button>
+</div>
+
+<main id="catalog"></main>
+
+<footer>
+<a class="whatsapp" href="https://wa.me/573216662612?text=Hola%20iAShop%2C%20quiero%20consultar%20por%20un%20equipo." target="_blank">💬 Consultar por WhatsApp</a>
+</footer>
+
+<script>
+const WA="573216662612";
+
+const products=[
+["new","iPhone 12","64GB · SIM física","Negro","📱"],
+["new","iPhone 13","128GB · SIM física","Negro","📱"],
+["new","iPhone 16","128GB · SIM física","Rosado · Blanco · Verde · Negro · Azul","📱"],
+["new","iPhone 17","256GB · SIM física","Negro · Azul · Morado · Verde","📱"],
+["new","iPhone 17 Pro Max","256GB · eSIM","Orange · Blue · Silver","📱"],
+["new","iPhone 17 Pro Max","512GB · eSIM","Silver · Orange · Blue","📱"],
+["new","iPhone 18 Pro Max","256GB · eSIM","Black · Glaciar · Burgundy","📱"],
+["new","iPhone 18 Pro Max","256GB · SIM física","Silver","📱"],
+["new","iPhone 18 Pro Max","512GB · eSIM","Silver · Burgundy","📱"],
+["new","iPhone Duos","512GB","Blanco · Negro","📱"],
+
+["display","iPhone 14","128GB · eSIM · Batería 100%","Negro","⭐"],
+["display","iPhone 15","128GB · eSIM · Batería 95%","Azul","⭐"],
+["display","iPhone 15 Pro","256GB · eSIM · Batería 86%","Azul","⭐"],
+["display","iPhone 16 Pro Max","256GB · eSIM · Batería 91%","Amarillo","⭐"],
+["display","iPhone 16 Pro Max","512GB · eSIM · Batería 88%","Negro","⭐"],
+["display","iPhone 17 Pro","256GB · eSIM","Caja original y cable","⭐"],
+
+["ipad","iPad A16","128GB","Blue · Silver · Pink","📱"],
+["ipad","iPad A16","256GB","Silver · Blue · Pink","📱"],
+
+["airpods","AirPods 4","","Sin cancelación activa de ruido","🎧"],
+["airpods","AirPods 4 ANC","","Cancelación activa de ruido","🎧"],
+["airpods","AirPods Pro 2","","","🎧"],
+["airpods","AirPods Pro 3","","","🎧"],
+["airpods","AirPods Max 2","USB-C","Dorado · Morado · Negro · Azul","🎧"],
+["airpods","Audífonos Apple","Lightning","Cableados","🎧"],
+["airpods","Audífonos Apple","USB-C","Cableados","🎧"],
+
+["watch","Apple Watch Series 11","42mm","Gray","⌚"],
+["watch","Apple Watch Ultra 3","","Black","⌚"],
+
+["accessories","Apple Pencil","USB-C","","✏️"],
+["accessories","AirTag","","","📍"],
+["accessories","Cargador Apple","20W","1 año de garantía Apple","🔌"],
+["accessories","Cable Lightning","1 metro","1 año de garantía","🔌"],
+["accessories","Cable USB-C","1 metro","1 año de garantía","🔌"]
+];
+
+const titles={
+new:"🍎 iPhone nuevos",
+display:"⭐ iPhone de exhibición",
+ipad:"📱 iPad",
+airpods:"🎧 AirPods y audio",
+watch:"⌚ Apple Watch",
+accessories:"🔌 Accesorios"
+};
+
+function wa(p){
+let text=`Hola iAShop, estoy interesado en ${p[1]}${p[2]?" · "+p[2]:""}${p[3]?" · "+p[3]:""}. ¿Está disponible?`;
+return `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
+}
+
+function render(filter="all"){
+const cat=document.getElementById("catalog");
+cat.innerHTML="";
+const groups=["new","display","ipad","airpods","watch","accessories"];
+groups.forEach(g=>{
+if(filter!="all"&&filter!=g)return;
+const list=products.filter(p=>p[0]==g);
+if(!list.length)return;
+const section=document.createElement("section");
+section.className="section";
+section.innerHTML=`<h2>${titles[g]}</h2><div class="grid"></div>`;
+const grid=section.querySelector(".grid");
+list.forEach(p=>{
+grid.innerHTML+=`
+<div class="card">
+<div class="icon">${p[4]}</div>
+<div class="name">${p[1]}</div>
+<div class="spec">${p[2]}${p[2]&&p[3]?" · ":""}${p[3]}</div>
+<div class="stock">● Disponible para consultar</div>
+<a href="${wa(p)}" target="_blank">
+<button>💬 Consultar</button>
+</a>
+</div>`;
+});
+cat.appendChild(section);
+});
+window.scrollTo({top:0,behavior:"smooth"});
+}
+
+document.querySelectorAll(".filters button").forEach(btn=>{
+btn.addEventListener("click",()=>{
+document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+btn.classList.add("active");
+render(btn.dataset.filter);
+});
+});
+
+render();
+</script>
+</body>
+</html>
